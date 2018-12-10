@@ -94,12 +94,22 @@
 										
 										<div class="tab-content">
 											<div class="tab-pane fade in active padding-10" id="hr1">
-												<h4>Masina nimi: <strong><?php echo $eq["name"];?></strong></h4>
-												<h4>Masina kirjeldus:</h4>
-												<strong><?php echo $eq["about"]; ?></strong>
-												<hr/>
-												<div class="form-group text-right">
-													<button data-toggle="modal" data-target="#ChangeNameAbout" type="button" class="btn btn-primary">Muuda</button>
+												<div class="col-xs-12">
+													<div class="col-xs-2"><img src="http://proxyprivat.com/images/noimage.jpeg" class="img-thumbnail"></div>
+														
+													<div class="col-xs-7">
+														<h1><span class="EQ_name"></span> (ID <span class="EQ_id"></span>)<small class="block"><span class="EQ_company">Makaroon Oü</span> - <span class="EQ_serial">593929182394</span></small></h1>
+														<p class="EQ_about"></p>
+													</div>
+													<div class="col-xs-3">
+														<ul class="unordered list-big well">
+															<li>Staatus: <label class="label label-primary">Laos</label></li>
+															<li>Asukoht: <span>T5-H4</span></li>
+															<li>Kategooria: <span>Käsitööriistad</span></li>
+															<li>Kasutaja: <span>Peeter Pakiraam</span></li>
+															
+														</ul>
+													</div>
 												</div>
 											</div>
 											<div class="tab-pane fade" id="hr2"></div>
@@ -114,14 +124,6 @@
 														</tr>
 													</thead>
 													<tbody>
-														<?php $lists = $db->fetch_all("SELECT * FROM eq_used WHERE eq_id = '".$_GET["id"]."'");?>
-														<?php foreach ($lists as $list): ?>
-														<tr>
-															<td><?php echo getValue("username","users","id",$list["user_id"]);?></td>
-															<td><?php echo $list["datetime"];?></td>
-															<td><button class="btn btn-primary">Vaata profiili</button>
-														</tr>
-														<?php endforeach; ?>
 													</tbody>
 												</table>
 											</div>

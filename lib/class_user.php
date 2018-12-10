@@ -468,6 +468,26 @@
 			echo json_encode($data,true);
 	  }
 
+      /**
+       * User::GetEqData()
+       * 
+       * @return
+       */
+	  public function GetEqData()
+	  {
+		  global $db, $core;
+			
+			$eq = $db->first("SELECT * FROM eq WHERE id = '".$_POST["eid"]."'");
+			
+			$result["name"] = $eq["name"];
+			$result["def"] = $eq["def"];
+			$result["company"] = $eq["company"];
+			$result["serial"] = $eq["location"];
+			$result["id"] = $eq["id"];
+			$result["about"] = $eq["about"];
+			
+			echo json_encode($result,true);
+	  }
 
 	  }	
 ?>

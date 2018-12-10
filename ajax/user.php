@@ -95,3 +95,12 @@
  $user->EqList();
   endif;
 ?>
+<?php
+  /* GetEqData */
+  if (isset($_GET['GetEqData']))
+      : if (intval($_GET['GetEqData']) == 0 || empty($_GET['GetEqData']))
+      : redirect_to("../index.php");
+  endif;
+ $user->GetEqData();
+  endif;
+?>

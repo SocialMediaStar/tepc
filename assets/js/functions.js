@@ -434,3 +434,8 @@ function EqList() {
 		$("#result").html(f);
 	});
 }
+function EQ_data(eid) {
+	$.getJSON( "ajax/user.php", {'GetEqData':"1","eid":eid}, function( data ) {
+		$(".EQ_name").html(data.name);
+	});
+}
