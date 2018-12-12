@@ -68,22 +68,50 @@
  $user->ChangeData();
   endif;
 ?>
+
 <?php
-  /* AddEQ */
-  if (isset($_POST['AddEQ']))
-      : if (intval($_POST['AddEQ']) == 0 || empty($_POST['AddEQ']))
+  /* ChangeEqData */
+  if (isset($_POST['ChangeEqData']))
+      : if (intval($_POST['ChangeEqData']) == 0 || empty($_POST['ChangeEqData']))
       : redirect_to("../index.php");
   endif;
- $user->AddEQ();
+ $user->ChangeEqData();
   endif;
 ?>
 <?php
-  /* ChangeAbout */
-  if (isset($_POST['ChangeAbout']))
-      : if (intval($_POST['ChangeAbout']) == 0 || empty($_POST['ChangeAbout']))
+  /* ChangeEqStatus */
+  if (isset($_POST['ChangeEqStatus']))
+      : if (intval($_POST['ChangeEqStatus']) == 0 || empty($_POST['ChangeEqStatus']))
       : redirect_to("../index.php");
   endif;
- $user->ChangeAbout();
+ $user->ChangeEqStatus();
+  endif;
+?>
+<?php
+  /* AddNewStatus */
+  if (isset($_POST['AddNewStatus']))
+      : if (intval($_POST['AddNewStatus']) == 0 || empty($_POST['AddNewStatus']))
+      : redirect_to("../index.php");
+  endif;
+ $user->AddNewStatus();
+  endif;
+?>
+<?php
+  /* AddNewCategory */
+  if (isset($_POST['AddNewCategory']))
+      : if (intval($_POST['AddNewCategory']) == 0 || empty($_POST['AddNewCategory']))
+      : redirect_to("../index.php");
+  endif;
+ $user->AddNewCategory();
+  endif;
+?>
+<?php
+  /* eqHistory */
+  if (isset($_GET['eqHistory']))
+      : if (intval($_GET['eqHistory']) == 0 || empty($_GET['eqHistory']))
+      : redirect_to("../index.php");
+  endif;
+ $user->eqHistory();
   endif;
 ?>
 <?php

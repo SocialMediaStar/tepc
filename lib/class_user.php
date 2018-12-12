@@ -429,23 +429,129 @@
 			echo json_encode($result,true);
 	  }
       /**
-       * User::ChangeAbout()
+       * User::ChangeEqData()
        * 
        * @return
        */
-	  public function ChangeAbout()
+	  public function ChangeEqData()
 	  {
 		  global $db, $core;
-			
+		
+		if (isset($_FILES["picture"]) && !empty($_FILES["picture"]["tmp_name"])) {
+			$validextensions = array("jpeg", "jpg", "png");
+			$temporary = explode(".", $_FILES["picture"]["name"]);
+			$file_extension = end($temporary);
+			if ((($_FILES["picture"]["type"] == "image/png")
+			|| ($_FILES["picture"]["type"] == "image/jpg")
+			|| ($_FILES["picture"]["type"] == "image/jpeg"))
+			&& ($_FILES["picture"]["size"] < 2097152)){
+			} else {
+				$e = 'Profile picture must be png,jpg or jpeg and smaller than 2mb.';  
+			}
+			} 
+		if (!isset($e) && empty($e) && isset($_FILES["picture"]) && !empty($_FILES["picture"]["tmp_name"])) {
+				$location = $core->site_dir.'uploads/eq/'; 
+				$location_url = $core->site_url.'uploads/eq/';
+				if (!is_dir($location)){
+					mkdir($location, 0777, true);
+				} 
+				$filename = uniqid().".".$file_extension;
+				if (move_uploaded_file($_FILES["picture"]["tmp_name"],$location . $filename)) {	
+					$picture = $location_url . $filename;
+				} else {
+					$e = "Something goes wrong, please try again!";
+				}
+				}
+					if ($_POST["new"] == "1") {
+						if (!isset($_POST["eqstatus"])) {
+							$e = "Staatus on puudu";
+						} else {
+						$status = $_POST["eqstatus"];							
+						}
+					} else {
+						$status = 0;
+					}				
+				if (!isset($e)) {
+					if (!isset($picture)) {
+						if ($_POST["new"] == "0") {
+							$picture = getValue("picture","eq","id",$_POST["eqid"]);
+						} else {
+							$picture = "";
+						}
+					}
+					
 				$data = array(
+					"user_id" => $this->uid,
 					"name" => $_POST["name"],
-					"about" => nl2br($_POST["about"])
+					"def" => $_POST["def"],
+					"company" => $_POST["company"],
+					"serial" => $_POST["serial"],
+					"category_id" => $_POST["category"],
+					"location" => $_POST["eqlocation"],
+					"about" => nl2br($_POST["about"]),
+					"picture" => $picture,
+					"status_id" => $status
 					);
-				$db->update("eq", $data, "id='" . $_POST["eqid"] . "'");
-
+					if ($_POST["new"] == "0") {
+						$db->update("eq", $data, "id='" . $_POST["eqid"] . "'");
+						$result["eid"] = $_POST["eqid"];
+					} else {
+						$id = $db->insert("eq",$data);
+						$result["eid"] = $id;
+					}
 				$result["success"] = "1";
 				$result["msg"] = "Seadme andmed uuendatud!";
+				$result["eqnew"] = $_POST["new"];
+				} else {
+				$result["success"] = "0";
+				$result["msg"] = $e;
+				}
 			echo json_encode($result,true);
+	  }
+      /**
+       * User::ChangeEqStatus()
+       * 
+       * @return
+       */
+	  public function ChangeEqStatus()
+	  {
+		  global $db, $core;
+				$ns = $db->first("SELECT * FROM eq WHERE id = '".$_POST["eqid"]."'");
+				$data = array(
+				"count" => "minus(1)"
+				);
+				$db->update("eq_status", $data, "id='" . $ns["status_id"] . "'");
+
+				$data = array(
+				"count" => "inc(1)"
+				);
+				$db->update("eq_status", $data, "id='" . $_POST["eqstatus"] . "'");
+				
+				
+				$data = array(
+					"status_id" => $_POST["eqstatus"],
+					);
+					$db->update("eq", $data, "id='" . $_POST["eqid"] . "'");
+					
+					if (isset($_POST["comment"])) {
+						$comment = $_POST["comment"];
+					} else {
+						$comment = "";
+					}
+				$data = array(
+					"user_id" => $this->uid,
+					"eq_id" => $_POST["eqid"],
+					"status_id" => $_POST["eqstatus"],
+					"comment" => $comment,
+					"datetime" => "NOW()"
+				);				
+				$db->insert("eq_history",$data);
+				
+				$result["eid"] = $_POST["eqid"];
+				$result["success"] = "1";
+				$result["msg"] = "Seadme staatus uuendatud!";
+
+				echo json_encode($result,true);
 	  }
       /**
        * User::EqList()
@@ -469,6 +575,37 @@
 	  }
 
       /**
+       * User::eqHistory()
+       * 
+       * @return
+       */
+	  public function eqHistory()
+	  {
+		  global $db, $core;
+			
+			$his = $db->fetch_all("
+			SELECT 
+			a.user_id,a.eq_id,a.status_id,a.comment,a.datetime,
+			b.username,b.fname,b.lname,
+			c.name as status_name,c.label as status_label
+			FROM eq_history as a
+			LEFT JOIN users as b ON b.id = a.user_id
+			LEFT JOIN eq_status as c ON c.id = a.status_id
+			WHERE a.eq_id = '".$_GET["id"]."'");
+			$i=0;
+			foreach ($his as $h):
+				$data["data"][$i]["Nimi"] = $h["fname"]." ".$h["lname"];
+				$data["data"][$i]["Staatus"] = "<label class='label label-".$h["status_label"]."'>".$h["status_name"]."</label>";
+				$data["data"][$i]["Kommentaar"] = $h["comment"];
+				$data["data"][$i]["Aeg"] = date('Y-m-d', strtotime($h["datetime"]));
+				
+			$i++;	
+			endforeach;
+			
+			
+			echo json_encode($data,true);
+	  }
+      /**
        * User::GetEqData()
        * 
        * @return
@@ -477,15 +614,55 @@
 	  {
 		  global $db, $core;
 			
-			$eq = $db->first("SELECT * FROM eq WHERE id = '".$_POST["eid"]."'");
+			$eq = $db->first("SELECT * FROM eq WHERE id = '".$_GET["eid"]."'");
+			$status = $db->first("SELECT * FROM eq_status WHERE id = '".$eq["status_id"]."'");
+			$cat = $db->first("SELECT * FROM eq_category WHERE id = '".$eq["category_id"]."'");
 			
 			$result["name"] = $eq["name"];
 			$result["def"] = $eq["def"];
 			$result["company"] = $eq["company"];
-			$result["serial"] = $eq["location"];
+			$result["serial"] = $eq["serial"];
+			$result["location"] = $eq["location"];
 			$result["id"] = $eq["id"];
 			$result["about"] = $eq["about"];
+			$result["picture"] = $eq["picture"];
+			$result["category"] = $cat["name"];
+			$result["status"] = $status["name"];
+			$result["status_label"] = $status["label"];
 			
+			echo json_encode($result,true);
+	  }
+     /**
+       * User::AddNewStatus()
+       * 
+       * @return
+       */
+	  public function AddNewStatus()
+	  {
+		  global $db, $core;
+				$data = array(
+					"name" => $_POST["eqstatus"],
+					"label" => $_POST["label"]
+				);
+				$db->insert("eq_status",$data);
+				$result["success"] = "1";
+				$result["msg"] = "Tehtud";
+			echo json_encode($result,true);
+	  }
+    /**
+       * User::AddNewCategory()
+       * 
+       * @return
+       */
+	  public function AddNewCategory()
+	  {
+		  global $db, $core;
+				$data = array(
+					"name" => $_POST["category"]
+				);
+				$db->insert("eq_category",$data);
+				$result["success"] = "1";
+				$result["msg"] = "Tehtud";
 			echo json_encode($result,true);
 	  }
 

@@ -53,7 +53,9 @@
 					</p>
 					<p>
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddEQModal">Lisa seade</button>
-					</p>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddNewStatusModal">Lisa uus staatus</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddNewCategoryModal">Lisa uus kategooria</button>
+						</p>
 				</div>
 				<table class="table well">
 					<thead>
@@ -157,6 +159,65 @@
 		<!-- END SHORTCUT AREA -->
 
 		<!--================================================== -->
+		<div class="modal fade" id="AddNewStatusModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Lisa uus staatus</h4>
+      </div>
+	  <form method="post" action="javascript:void(0)" id="AddNewStatus">
+	  <input type="hidden" name="AddNewStatus" value="1">
+      <div class="modal-body">
+		<div class="form-group">
+			<label>Staatuse nimi</label>
+			<input type="text" name="eqstatus" class="form-control" placeholder="Staatuse nimi">
+		</div>
+		<div class="form-group">
+			<label>Staatuse värv</label>
+			<select name="label" class="form-control">
+				<option disabled selected>--- Vali staatuse värv ---</option>
+				<option value="primary">Sinine</option>
+				<option value="info">Helesinine</option>
+				<option value="success">Roheline</option>
+				<option value="warning">Kollane</option>
+				<option value="danger">Punane</option>
+			</select>
+		</div>
+		<div class="ResultArea"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Loobu</button>
+        <button type="submit" class="btn btn-primary">Salvesta</button>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
+		<div class="modal fade" id="AddNewCategoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Lisa uus categoory</h4>
+      </div>
+	  <form method="post" action="javascript:void(0)" id="AddNewCategory">
+	  <input type="hidden" name="AddNewCategory" value="1">
+      <div class="modal-body">
+		<div class="form-group">
+			<label>Kategooria nimi</label>
+			<input type="text" name="category" class="form-control" placeholder="Kategooria nimi">
+		</div>
+		<div class="ResultArea"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Loobu</button>
+        <button type="submit" class="btn btn-primary">Salvesta</button>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="AddEQModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -164,16 +225,56 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Lisa uus seade</h4>
       </div>
-	  <form method="post" action="javascript:void(0)" id="AddEQ">
-	  <input type="hidden" name="AddEQ" value="1">
+	  <form method="post" action="javascript:void(0)" id="ChangeEqData">
+	  <input type="hidden" name="ChangeEqData" value="1">
+	  <input type="hidden" name="new" value="1">
       <div class="modal-body">
         <div class="form-group">
 			<label>Seadme nimi</label>
-			<input type="text" name="name" placeholder="Seadme nimi" class="form-control">
+			<input type="text" name="name" placeholder="Seadme nimi" class="form-control" value="">
+		</div>
+		<div class="form-group">
+			<label>Seadme ID:</label>
+			<input type="text" name="def" class="form-control" placeholder="Seadme ID" value="">
+		</div>
+		<div class="form-group">
+			<label>Seadme firma</label>
+			<input type="text" name="company" class="form-control" placeholder="Seadme firma" value="">
+		</div>
+		<div class="form-group">
+			<label>Seadme seerianumber</label>
+			<input type="text" name="serial" class="form-control" placeholder="Seadme seerianumber" value="">
 		</div>
         <div class="form-group">
 			<label>Seadme kirjeldus</label>
 			<textarea class="form-control" name="about"></textarea>
+		</div>
+		<div class="form-group">
+			<label>Seadme kategooria</label>
+			<select class="form-control" name="category">
+				<?php $cats = $db->fetch_all("SELECT * FROM eq_category"); ?>
+				<?php foreach ($cats as $cat): ?>
+					<option value="<?php echo $cat["id"];?>"><?php echo $cat["name"];?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Seadme asukoht</label>
+			<input type="text" name="eqlocation" class="form-control" placeholder="Seadme location" value="">			
+		</div>
+		<div class="form-group">
+			<label class="block">Seadme staatus</label>
+			<div class="btn-group" data-toggle="buttons">
+				<?php $status = $db->fetch_all("SELECT * FROM eq_status"); ?>
+				<?php $i=1; foreach ($status as $st): ?>
+				<label class="btn btn-<?php echo $st["label"];?>">
+					<input type="radio" value="<?php echo $st["id"];?>" name="eqstatus" id="option<?php echo $i;?>" autocomplete="off"> <?php echo $st["name"];?>
+				</label>
+				<?php $i++; endforeach; ?>
+		</div>		
+		<div class="form-group">
+			<label>Seadme pilt</label>
+			<input type="file" name="picture" class="form-control">
 		</div>
 		<div class="ResultArea"></div>
       </div>

@@ -323,13 +323,23 @@ $('#ChangeData').validate({
 
 	}
 });
+
 /*
-* AddEQ
+* ChangeEqData
 */
-$('#AddEQ').validate({
+$('#ChangeEqData').validate({
 	ignore: "",
 	rules: {
 		name: {
+			required:true,
+		},
+		def: {
+			required:true,
+		},
+		eqlocation: {
+			required:true,
+		},
+		category: {
 			required:true,
 		},
 		about: {
@@ -345,18 +355,30 @@ $('#AddEQ').validate({
 		}
 	},
 	submitHandler: function(form) {
-		var formData = $( "#AddEQ" ).serialize();
+
+		var formData = new FormData($('#ChangeEqData')[0]);
 		
         $.ajax({
             type:'POST',
             url: site_url+"ajax/user.php",
 			dataType: "json",
             data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
             success:function(data){
 				if (data.success === "1") {
-					location.href = "eq.php?id="+data.eqid;	
+						if (data.eqnew === "1") {
+							$("#AddEQModal").modal("hide");
+							EqList();
+							
+						} else {
+						EQ_data(data.eid);
+						$("#ChangeEqDataModal").modal("hide");
+							
+						}
 				} else {
-					   $("#AddEQModal .ResultArea").html(data.msg);
+					   $("#ChangeEqData .ResultArea").html(data.msg);
 				}
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -367,39 +389,122 @@ $('#AddEQ').validate({
 	}
 });
 /*
-* ChangeAbout
+* ChangeEqStatus
 */
-$('#ChangeAbout').validate({
+$('#ChangeEqStatus').validate({
 	ignore: "",
 	rules: {
-		name: {
-			required:true,
-		},
-		about: {
+		eqstatus: {
 			required:true,
 		}
 	},
 	messages: {
-		name: {
-			required: "Seadme nimi puudu",
-		},
-		about: {
-			required: "Seadme kirjeldus puudu",
+		eqstatus: {
+			required: "Vali staatus ka ikka.",
 		}
 	},
 	submitHandler: function(form) {
-		var formData = $( "#ChangeAbout" ).serialize();
+
+		var formData = new FormData($('#ChangeEqStatus')[0]);
 		
         $.ajax({
             type:'POST',
             url: site_url+"ajax/user.php",
 			dataType: "json",
             data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
             success:function(data){
 				if (data.success === "1") {
-					location.reload();
+						EQ_data(data.eid);
+					$("#ChangeEqStatusModal").modal("hide");
 				} else {
-					   $("#ChangeAbout .ResultArea").html(data.msg);
+					   $("#ChangeEqStatus .ResultArea").html(data.msg);
+				}
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr);
+            }
+        });
+
+	}
+});
+/*
+* AddNewStatus
+*/
+$('#AddNewStatus').validate({
+	ignore: "",
+	rules: {
+		eqstatus: {
+			required:true,
+		}
+	},
+	messages: {
+		eqstatus: {
+			required: "Lisa staatuse nimi",
+		}
+	},
+	submitHandler: function(form) {
+
+		var formData = new FormData($('#AddNewStatus')[0]);
+		
+        $.ajax({
+            type:'POST',
+            url: site_url+"ajax/user.php",
+			dataType: "json",
+            data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+            success:function(data){
+				if (data.success === "1") {
+						EQ_data(data.eid);
+					$("#AddNewStatusModal").modal("hide");
+				} else {
+					   $("#AddNewStatusModal .ResultArea").html(data.msg);
+				}
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr);
+            }
+        });
+
+	}
+});
+/*
+* AddNewCategory
+*/
+$('#AddNewCategory').validate({
+	ignore: "",
+	rules: {
+		category: {
+			required:true,
+		}
+	},
+	messages: {
+		category: {
+			required: "Lisa kategooria nimi",
+		}
+	},
+	submitHandler: function(form) {
+
+		var formData = new FormData($('#AddNewCategory')[0]);
+		
+        $.ajax({
+            type:'POST',
+            url: site_url+"ajax/user.php",
+			dataType: "json",
+            data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+            success:function(data){
+				if (data.success === "1") {
+						EQ_data(data.eid);
+					$("#AddNewCategoryModal").modal("hide");
+				} else {
+					   $("#AddNewCategoryModal .ResultArea").html(data.msg);
 				}
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -436,6 +541,16 @@ function EqList() {
 }
 function EQ_data(eid) {
 	$.getJSON( "ajax/user.php", {'GetEqData':"1","eid":eid}, function( data ) {
-		$(".EQ_name").html(data.name);
+		console.log(data);
+		$(".EQ_name").html("<strong>"+data.name+"</strong>");
+		$(".EQ_id").html("<strong>"+data.def+"</strong>");
+		$(".EQ_company").html(data.company);
+		$(".EQ_serial").html(data.serial);
+		$(".EQ_location").html(data.location);
+		$(".EQ_about").html(data.about);
+		$(".EQ_category").html(data.category);
+		$(".EQ_status").html(data.status);
+		$(".EQ_status").addClass("label-"+data.status_label);
+		$(".EQ_picture").attr("src",data.picture);
 	});
 }
