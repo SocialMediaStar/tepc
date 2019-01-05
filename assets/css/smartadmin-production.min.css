@@ -38,3 +38,13 @@
  .modal label {
 	 font-weight:bold;
  }
+ .thumb-header {
+  padding: 5px;
+  background: #3A3633;
+  color:#fff;
+ }
+ .thumb-footer {
+  padding: 5px;
+  background: #3A3633;	 
+  color:#fff;
+ }

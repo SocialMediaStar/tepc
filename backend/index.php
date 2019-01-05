@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<?php require "required/head.php"; ?>
+<body class="">
+<?php require "required/header.php"; ?>
+<?php require "required/left.php"; ?>
+
+		<div id="main" role="main">
+
+			<!-- RIBBON -->
+			<div id="ribbon">
+
+				<span class="ribbon-button-alignment"> 
+					<span id="refresh" class="btn btn-ribbon" data-action="resetWidgets" data-title="refresh"  rel="tooltip" data-placement="bottom" data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings." data-html="true">
+						<i class="fa fa-refresh"></i>
+					</span> 
+				</span>
+
+				<!-- breadcrumb -->
+				<ol class="breadcrumb">
+					<li>Home</li><li>Miscellaneous</li><li>Blank Page</li>
+				</ol>
+				<!-- end breadcrumb -->
+
+				<!-- You can also add more buttons to the
+				ribbon for further usability
+
+				Example below:
+
+				<span class="ribbon-button-alignment pull-right">
+				<span id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa-grid"></i> Change Grid</span>
+				<span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa-plus"></i> Add</span>
+				<span id="search" class="btn btn-ribbon" data-title="search"><i class="fa-search"></i> <span class="hidden-mobile">Search</span></span>
+				</span> -->
+
+			</div>
+			<!-- END RIBBON -->
+			
+			
+
+			<!-- MAIN CONTENT -->
+			<div id="content">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="well">
+						<h1 class="semi-bold">Welcome to <?php echo $core->site_name;?></h1>
+						<p>Here you will see next service dates</p>
+					</div>				
+				</div>
+				<div class="col-xs-12 col-sm-12">
+					<table class="table table-bordered table-striped" id="nextServices">
+						<thead>
+							<tr>
+								<th>Equipment</th>
+								<th>Service name</th>
+								<th>Service date</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>2</td>
+								<td>3</td>
+								<td>4</td>								
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+<!--- Open Modal --->
+<div class="modal fade" id="OpenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+		<div class="modal-body">
+		</div>
+    </div>
+  </div>
+</div>
+		
+<?php require "required/javascript.php";?>
+
+	<script src="assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+	<script src="assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
+	<script src="assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+	<script src="assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+	<script src="assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
+	<script src="assets/js/functions.js"></script>
+	<script src="assets/js/user.js"></script>
+	<script src="assets/js/eq.js"></script>
+	<script src="assets/js/modals.js"></script>
+	<script>
+		nextServices();
+	</script>
+</body>
+</html>

@@ -16,11 +16,11 @@
 ?>
 <?php
   /* AddUser */
-  if (isset($_POST['AddUser']))
-      : if (intval($_POST['AddUser']) == 0 || empty($_POST['AddUser']))
+  if (isset($_POST['NewUser']))
+      : if (intval($_POST['NewUser']) == 0 || empty($_POST['NewUser']))
       : redirect_to("../index.php");
   endif;
- $user->AddUser();
+ $user->NewUser();
   endif;
 ?>
 <?php
@@ -43,8 +43,8 @@
 ?>
 <?php
   /* UserList */
-  if (isset($_GET['UserList']))
-      : if (intval($_GET['UserList']) == 0 || empty($_GET['UserList']))
+  if (isset($_GET['userList']))
+      : if (intval($_GET['userList']) == 0 || empty($_GET['userList']))
       : redirect_to("../index.php");
   endif;
  $user->UserList();
@@ -60,75 +60,11 @@
   endif;
 ?>
 <?php
-  /* ChangeData */
-  if (isset($_POST['ChangeData']))
-      : if (intval($_POST['ChangeData']) == 0 || empty($_POST['ChangeData']))
+  /* EditUser */
+  if (isset($_POST['EditUser']))
+      : if (intval($_POST['EditUser']) == 0 || empty($_POST['EditUser']))
       : redirect_to("../index.php");
   endif;
- $user->ChangeData();
-  endif;
-?>
-
-<?php
-  /* ChangeEqData */
-  if (isset($_POST['ChangeEqData']))
-      : if (intval($_POST['ChangeEqData']) == 0 || empty($_POST['ChangeEqData']))
-      : redirect_to("../index.php");
-  endif;
- $user->ChangeEqData();
-  endif;
-?>
-<?php
-  /* ChangeEqStatus */
-  if (isset($_POST['ChangeEqStatus']))
-      : if (intval($_POST['ChangeEqStatus']) == 0 || empty($_POST['ChangeEqStatus']))
-      : redirect_to("../index.php");
-  endif;
- $user->ChangeEqStatus();
-  endif;
-?>
-<?php
-  /* AddNewStatus */
-  if (isset($_POST['AddNewStatus']))
-      : if (intval($_POST['AddNewStatus']) == 0 || empty($_POST['AddNewStatus']))
-      : redirect_to("../index.php");
-  endif;
- $user->AddNewStatus();
-  endif;
-?>
-<?php
-  /* AddNewCategory */
-  if (isset($_POST['AddNewCategory']))
-      : if (intval($_POST['AddNewCategory']) == 0 || empty($_POST['AddNewCategory']))
-      : redirect_to("../index.php");
-  endif;
- $user->AddNewCategory();
-  endif;
-?>
-<?php
-  /* eqHistory */
-  if (isset($_GET['eqHistory']))
-      : if (intval($_GET['eqHistory']) == 0 || empty($_GET['eqHistory']))
-      : redirect_to("../index.php");
-  endif;
- $user->eqHistory();
-  endif;
-?>
-<?php
-  /* EqList */
-  if (isset($_GET['EqList']))
-      : if (intval($_GET['EqList']) == 0 || empty($_GET['EqList']))
-      : redirect_to("../index.php");
-  endif;
- $user->EqList();
-  endif;
-?>
-<?php
-  /* GetEqData */
-  if (isset($_GET['GetEqData']))
-      : if (intval($_GET['GetEqData']) == 0 || empty($_GET['GetEqData']))
-      : redirect_to("../index.php");
-  endif;
- $user->GetEqData();
+ $user->EditUser();
   endif;
 ?>

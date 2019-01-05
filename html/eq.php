@@ -68,10 +68,13 @@
 											<a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class=""> Tehnilised andmed </span></a>
 										</li>
 										<li>
-											<a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class=""> Kasutusjuhend </span></a>
+											<a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class=""> Failid </span></a>
 										</li>
 										<li>
-											<a data-toggle="tab" href="#hr4"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class=""> Viimati kasutanud </span></a>
+											<a data-toggle="tab" href="#hr4"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class=""> Varuosad </span></a>
+										</li>
+										<li>
+											<a data-toggle="tab" href="#hr5"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class=""> Hoolduspäevik </span></a>
 										</li>
 
 									</ul>	
@@ -102,10 +105,10 @@
 													</div>
 													<div class="col-xs-12 col-md-3">
 														<ul class="unordered list-big well">
-															<li>Staatus: <label class="EQ_status label">Laos</label></li>
+															<li>Staatus: <label class="EQ_status label"></label></li>
 															<li>Asukoht: <span class="EQ_location"></span></li>
-															<li>Kategooria: <span class="EQ_category">Käsitööriistad</span></li>
-															<li>Kasutaja: <span>Peeter Pakiraam</span></li>
+															<li>Kategooria: <span class="EQ_category"></span></li>
+															<li>Kasutaja: <span class="EQ_user">Peeter Pakiraam</span></li>
 															
 														</ul>
 													</div>
@@ -113,27 +116,136 @@
 												<div class="col-xs-12">
 													<hr/>
 													<div class="form-group text-right">
+													
 														<button type="button" data-toggle="modal" data-target="#ChangeEqDataModal" class="btn btn-primary">Muuda</button>
 														<a href="eq_history.php?id=<?php echo $_GET["id"];?>" class="btn btn-primary">Vaata ajalugu</a>
 														<button type="button" data-toggle="modal" data-target="#ChangeEqStatusModal" class="btn btn-success">Muuda staatust</button>
 													</div>
 												</div>
 											</div>
-											<div class="tab-pane fade" id="hr2"></div>
-											<div class="tab-pane fade" id="hr3"></div>
-											<div class="tab-pane fade" id="hr4">
-												<table class="table table-striped">
-													<thead>
-														<tr>
-															<th>Kasutaja</th>
-															<th width="20%">Kuupäev</th>
-															<th width="20%">Tegevused</th>
-														</tr>
-													</thead>
-													<tbody>
-													</tbody>
-												</table>
+											<div class="tab-pane fade" id="hr2">
+												<div class="col-xs-12">
+													<div class="col-xs-12 col-sm-6">
+														<h4 class="margin-top-10"><strong>Seadme tehnilised andmed:</strong></h4>
+														<table class="table table-bordered table-striped margin-top-10">
+															<tbody class="EQ_techLabels">
+															</tbody>
+														</table>
+													</div>
+													<div class="col-xs-12 col-sm-6">
+														<h4 class="margin-top-10"><strong>Lisa informatsioon</strong></h4>
+														<p class="techMore"></p>
+													</div>
+													<div class="col-xs-12">
+														<hr/>
+														<div class="form-group text-right">
+															<button type="button" data-toggle="modal" data-target="#AddTechModal" class="btn btn-primary">Muuda / Lisa andmeid</button>
+														</div>
+													</div>
+												</div>
 											</div>
+											<div class="tab-pane fade" id="hr3">
+												<div class="padding-10">
+												<h4><strong>Failid:</strong>
+													<button type="button" data-toggle="modal" data-id="AddEqFile1" data-target="#AddEqFileModal" class="pull-right btn btn-primary">Lae fail ülesse</button>
+												</h4>
+												<hr/>
+													<div class="col-xs-12 filesArea">
+													</div>
+													
+												</div>
+											</div>
+											<div class="tab-pane fade" id="hr4">
+										<table id="datatable_fixed_column" class="table table-striped table-bordered" width="100%">
+					
+									        <thead>
+												<tr>
+													<th class="hasinput" style="width:20%">
+														<input type="text" class="form-control" placeholder="" />
+													</th>
+													<th class="hasinput" style="width:10%">
+														<input type="text" class="form-control" placeholder="" />
+													</th>
+													<th class="hasinput text-center" style="width:50%">
+														<input type="text" class="form-control" placeholder="" />
+													</th>
+												</tr>
+									            <tr>
+								                    <th>Kood</th>
+								                    <th>Kirjeldus</th>
+								                    <th>Müüa andmed</th>
+								                    <th>Tegevused</th>
+												</tr>
+									        </thead>
+				
+									        <tbody>
+									        </tbody>
+									
+										</table>
+												
+													<div class="col-xs-12">
+														<hr/>
+														<div class="form-group text-right">
+															<button type="button" data-toggle="modal" data-target="#AddEqPartsModal" class="btn btn-primary">Lisa varuosa</button>
+														</div>
+													</div>
+											</div>
+											<div class="tab-pane fade" id="hr5">
+												<form class="form-horizontal">
+												<div class="col-xs-12">
+													<div class="col-xs-4">
+														<div class="margin-top-10">
+															<span id="datepicker" class="datepicker" data-dateformat="yy-mm-dd"></span>
+															<div class="form-group margin-top-10">
+																<button class="btn btn-primary">Vaata ajalugu</button>
+																<button  type="button" data-toggle="modal" data-target="#AddEqServiceModal" class="btn btn-primary">Lisa hooldus</button>
+															</div>
+														</div>
+													</div>
+													<div class="col-xs-8 margin-top-10">
+														<div class="col-xs-12 well padding-10">
+																<div class="col-xs-9">
+																	<h4><strong>Täiesti normaalne hooldus <label class="label label-success">Teostatud</label></strong> </h4>
+																</div>
+																<div class="col-xs-3">
+																	<div class="dropdown pull-right">
+																	  <button class="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+																		<span class="caret"></span>
+																	  </button>
+																	  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+																		<li><a href="#">Action</a></li>
+																		<li><a href="#">Another action</a></li>
+																		<li><a href="#">Something else here</a></li>
+																		<li role="separator" class="divider"></li>
+																		<li><a href="#">Separated link</a></li>
+																	  </ul>
+																	</div>
+																</div>
+																<div class="col-xs-12">
+																	<p class="margin-top-10">
+																		<strong>Teostuse tegija:</strong> Peeter Pakiraam <br/>
+																		<strong>Teostuse aeg:</strong> 18.12.2018 
+																	</p>
+																	<p class="margin-top-10">
+																		<strong>Kasutatud varuosad:</strong> <br/>
+																		<label class="label label-primary">129482</label>
+																		<label class="label label-primary">129482</label>
+																		<label class="label label-primary">129482</label>
+																		<label class="label label-primary">129482</label>
+																	</p>
+																	<p>
+																		<strong>Hoolduse kirjeldus:</strong> <br/>
+																		Teostatud ja kõik oli korras ja hästi nagu ikka!
+																		Teostatud ja kõik oli korras ja hästi nagu ikka!
+																		Teostatud ja kõik oli korras ja hästi nagu ikka!
+																		Teostatud ja kõik oli korras ja hästi nagu ikka!
+																		Teostatud ja kõik oli korras ja hästi nagu ikka!
+																	</p>																
+																</div>
+														</div>
+													</div>
+												</div>
+											</div>	
 										</div>
 										<!-- end widget body text-->
 									</div>
@@ -234,6 +346,205 @@
 		<!-- END SHORTCUT AREA -->
 
 		<!--================================================== -->
+<div class="modal fade" id="AddEqPartsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Lisa seadme varuosa</h4>
+      </div>
+      <div class="modal-body col-xs-12">
+	  <form method="post" action="javascript:void(0)" id="AddEqParts">
+	  <input type="hidden" name="AddEqParts" value="1">
+	  <input type="hidden" name="eqid" value="<?php echo $_GET["id"];?>">
+		<div class="form-group col-xs-4">
+			<label>Kood</label>
+			<input type="text" name="code" class="form-control">
+		</div>
+		<div class="form-group col-xs-8">
+			<label>Kirjeldus</label>
+			<input type="text" name="desc" class="form-control">
+		</div>
+		<div class="form-group col-xs-12">
+			<label>Firma andmed</label>
+			<textarea class="form-control" name="company"></textarea>
+		</div>
+		<div class="ResultArea"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Loobu</button>
+        <button type="submit" class="btn btn-primary">Salvesta</button>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="AddEqFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Lisa fail</h4>
+      </div>
+	  <form method="post" action="javascript:void(0)" id="UploadEqFiles">
+	  <input type="hidden" name="UploadEqFiles" value="1">
+	  <input type="hidden" name="eqid" value="<?php echo $_GET["id"];?>">
+      <div class="modal-body">
+		
+		<div class="form-group">
+			<label>Faili nimi</label>
+			<input type="text" name="name" class="form-control">
+		</div>
+		<div class="form-group">
+			<label>Lae fail</label>
+			<input type="file" name="files" class="form-control">
+		</div>
+		<div class="ResultArea"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Loobu</button>
+        <button type="submit" class="btn btn-primary">Salvesta</button>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="AddEqServiceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+	  <form method="post" action="javascript:void(0)" id="AddEqService">
+	  <input type="hidden" name="AddEqService" value="1">
+	  <input type="hidden" name="eq_id" value="<?php echo $_GET["id"];?>">
+      <div class="modal-body col-xs-12">
+	  <h4> Lisa hooldus</h4>
+	  <hr/>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label>Hoolduse aeg</label>
+				<span class="datepicker" data-dateformat="yy-mm-dd"></span>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label>Hoolduse nimi</label>
+				<input type="text" name="sname" class="form-control"> 
+			</div>
+			<div class="form-group">
+				<label>Hoolduse tegija</label>
+				<input type="text" name="suser" class="form-control"> 
+			</div>
+			<div class="form-group">
+				<label>Kirjeldus</label>
+				<textarea name="sdesc" rows="5" class="form-control"></textarea>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label>Vali hoolduseks varuosad</label>
+				<select multiple style="width:100%" class="select2">
+				<?php $partsList = $db->fetch_all("SELECT * FROM eq_parts WHERE eq_id = '".$eq["id"]."'"); ?>
+				<?php foreach ($partsList as $pl): ?>
+					<option value="<?php echo $pl["id"];?>"><?php echo $pl["code"];?></option>
+				<?php endforeach; ?> 
+				</select>
+			</div>
+
+		</div>
+		<div class="ResultArea"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Loobu</button>
+        <button type="submit" class="btn btn-primary">Salvesta</button>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ViewEqFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Sulge aken</button>
+		<hr/>
+			<div class="ViewArea margin-top-10">
+			
+			</div>
+		<div class="ResultArea"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="EditEqFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+	  <form method="post" action="javascript:void(0)" id="EditEqFile">
+	  <input type="hidden" name="EditEqFile" value="1">
+	  <input type="hidden" name="fid" value="">
+	  <input type="hidden" name="eqid" value="<?php echo $_GET["id"];?>">
+      <div class="modal-body">
+		<div class="form-group">
+			<label>Muuda faili nime</label>
+			<input type="text" name="name" class="form-control">
+		</div>
+		<div class="text-right">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Loobu</button>
+			<button type="submit" class="btn btn-primary">Salvesta</button>
+		</div>
+		<div class="ResultArea"></div>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="AddTechModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Muuda seadme tehnilisi andmeid</h4>
+      </div>
+	  <form method="post" action="javascript:void(0)" id="AddTech">
+	  <input type="hidden" name="AddTech" value="1">
+	  <input type="hidden" name="eqid" value="<?php echo $_GET["id"];?>">
+      <div class="modal-body">
+		<h4 class="margin-top-10"><strong>Tehniline informatsioon:</strong></h4>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th width="50%">Label</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody id="TechRows">
+				<?php $techs = $db->fetch_all("SELECT * FROM eq_tech WHERE eq_id = '".$eq["id"]."'"); ?>
+				<?php foreach ($techs as $te): ?>
+				<tr>
+					<td><input type="text" name="label[]" class="form-control" value="<?php echo $te["label"];?>"></td>
+					<td><input type="text" name="value[]" class="form-control" value="<?php echo $te["name"];?>"></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+		<div class="form-group">
+			<button class="btn btn-success" type="button" onClick="AddTechRow();">Add row</button>
+		</div>
+		<h4 class="margin-top-10"><strong>Lisa informatsioon:</strong></h4>
+		<div class="form-group">
+			<textarea name="techMore" class="form-control" rows="10"></textarea>
+		</div>		
+		<div class="ResultArea"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Loobu</button>
+        <button type="submit" class="btn btn-primary">Salvesta</button>
+      </div>
+	  </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="ChangeEqDataModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -280,6 +591,10 @@
 			<input type="text" name="eqlocation" class="form-control" placeholder="Seadme location" value="<?php echo $eq["location"];?>">			
 		</div>
 		<div class="form-group">
+			<label>Seadme kasutaja</label>
+			<input type="text" name="whouse" class="form-control" placeholder="Seadme kasutaja" value="<?php echo $eq["who_use"];?>">			
+		</div>
+		<div class="form-group">
 			<label>Seadme pilt</label>
 			<input type="file" name="picture" class="form-control">
 		</div>
@@ -317,7 +632,7 @@
 			</div>
 			<div class="form-group">
 				<label>Kommentaar</label>
-				<textarea class="form-control" name="comment"></textarea>
+				<textarea class="form-control" name="comment"><?php echo $eq["tech_info"];?></textarea>
 			</div>
 		</div>
 		<div class="ResultArea"></div>
@@ -332,13 +647,81 @@
 </div>
 
 <?php require "scripts.php"; ?>		
+		<!-- PAGE RELATED PLUGIN(S) -->
+		<script src="assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+		<script src="assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
+		<script src="assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+		<script src="assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+		<script src="assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
 		<script>
 
 			$(document).ready(function() {
 				 pageSetUp();
 				 EQ_data(<?php echo $_GET["id"];?>);
-			})
-		
+				 EQ_TechData(<?php echo $_GET["id"];?>);
+				 EQ_GetFiles(<?php echo $_GET["id"];?>);
+				 })
+			/* BASIC ;*/
+				var responsiveHelper_dt_basic = undefined;
+				var responsiveHelper_datatable_fixed_column = undefined;
+				var responsiveHelper_datatable_col_reorder = undefined;
+				var responsiveHelper_datatable_tabletools = undefined;
+				
+				var breakpointDefinition = {
+					tablet : 1024,
+					phone : 480
+				};
+	
+			
+			/* COLUMN FILTER  */
+		    var otable = $('#datatable_fixed_column').DataTable({
+		    	//"bFilter": false,
+		    	//"bInfo": false,
+		    	//"bLengthChange": false
+		    	//"bAutoWidth": false,
+		    	//"bPaginate": false,
+		    	//"bStateSave": true // saves sort state using localStorage
+				"ajax": 'ajax/user/user.php?GetEqPartsData=1&id=<?php echo $eq["id"];?>',
+				"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>"+
+						"t"+
+						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+				"autoWidth" : true,
+				"oLanguage": {
+					"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+				},
+				"preDrawCallback" : function() {
+					// Initialize the responsive datatables helper once.
+					if (!responsiveHelper_datatable_fixed_column) {
+						responsiveHelper_datatable_fixed_column = new ResponsiveDatatablesHelper($('#datatable_fixed_column'), breakpointDefinition);
+					}
+				},
+				"rowCallback" : function(nRow) {
+					responsiveHelper_datatable_fixed_column.createExpandIcon(nRow);
+				},
+				"drawCallback" : function(oSettings) {
+					responsiveHelper_datatable_fixed_column.respond();
+				},
+				"columns": [
+							{ "data": "Kood" },
+							{ "data": "Kirjeldus" },
+							{ "data": "Müüa andmed" },
+							{ "data": "Tegevused" },
+						]	
+		    });
+		    
+		    	   
+		    // Apply the filter
+		    $("#datatable_fixed_column thead th input[type=text]").on( 'keyup change', function () {
+		    	
+		        otable
+		            .column( $(this).parent().index()+':visible' )
+		            .search( this.value )
+		            .draw();
+		            
+		    } );
+		    /* END COLUMN FILTER */   
+			
 		</script>
 	</body>
 </html>

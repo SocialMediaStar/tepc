@@ -269,11 +269,11 @@
 	  } 	
 
       /**
-       * User::AddUser()
+       * User::NewUser()
        * 
        * @return
        */
-	  public function AddUser()
+	  public function NewUser()
 	  {
 		  global $db, $core;
 			
@@ -281,15 +281,14 @@
 
 			if ($check) {
 				$result["success"] = "0";
-				$result["msg"] = "Selline kasutaja on juba olemas";
+				$result["msg"] = "This username already exists.";
 			} else {
-				$pass = sha1($_POST["password"]);
+				$pass = sha1($_POST["pass"]);
 				$data = array(
 					"fname" => $_POST["fname"],
 					"lname" => $_POST["lname"],
 					"username" => $_POST["username"],
-					"password" => $pass,
-					"level" => $_POST["level"]
+					"password" => $pass
 				);			
 				$db->insert("users",$data);
 				$result["success"] = "1";
@@ -309,7 +308,7 @@
 
 			if ($_POST["uid"] == $this->uid) {
 				$result["success"] = "0";
-				$result["msg"] = "Sa ei saa enda kasutajat kustutada";
+				$result["msg"] = "You can't delete your own account";
 			} else {
 				$db->delete("users","id = '".$_POST["uid"]."'");
 				$result["success"] = "1";	
@@ -338,11 +337,11 @@
 			echo json_encode($result,true);
 	  }
       /**
-       * User::ChangeData()
+       * User::EditUser()
        * 
        * @return
        */
-	  public function ChangeData()
+	  public function EditUser()
 	  {
 		  global $db, $core;
 			
@@ -351,11 +350,16 @@
 				$result["success"] = "0";
 				$result["msg"] = "Selline kasutaja on juba olemas!";
 			} else {
+				if (empty($_POST["password"])) {
+					$pass = $check["password"];
+				} else {
+					$pass = sha1($_POST["password"]);					
+				}
 				$data = array(
 					"fname" => $_POST["fname"],
 					"lname" => $_POST["lname"],
 					"username" => $_POST["username"],
-					"level" => $_POST["level"]
+					"password" => $pass
 				);
 				$db->update($this->uTable, $data, "id='" . $_POST["uid"] . "'");
 				
@@ -363,32 +367,6 @@
 				$result["msg"] = "Kasutaja andmed uuendatud!";
 			}
 			echo json_encode($result,true);
-	  }
-      /**
-       * User::UserList()
-       * 
-       * @return
-       */
-	  public function UserList()
-	  {
-		  global $db, $core;
-		  
-		  $lists = $db->fetch_all("SELECT * FROM users");
-		  
-		  foreach ($lists as $list):
-
-			if ($list["level"] == "1")  { $level = '<span class="label label-primary">Admin</span>'; }
-			if ($list["level"] == "2")  { $level = '<span class="label label-info">Tava kasutaja</span>'; }
-			
-			$data["list"][$list["id"]]["id"] = $list["id"];
-			$data["list"][$list["id"]]["name"] = $list["fname"] . " " . $list["lname"];
-			$data["list"][$list["id"]]["username"] = $list["username"];
-			$data["list"][$list["id"]]["level"] = $level;
-		  
-		  endforeach;
-		  
-			$data["count"] = count($lists);
-			echo json_encode($data,true);
 	  }
       /**
        * User::GetUserData()
@@ -469,7 +447,8 @@
 						$status = $_POST["eqstatus"];							
 						}
 					} else {
-						$status = 0;
+						$equ = $db->first("SELECT * FROM eq WHERE id = '".$_POST["eqid"]."'");
+						$status = $equ["status_id"];
 					}				
 				if (!isset($e)) {
 					if (!isset($picture)) {
@@ -481,7 +460,7 @@
 					}
 					
 				$data = array(
-					"user_id" => $this->uid,
+					"who_use" => $_POST["whouse"],
 					"name" => $_POST["name"],
 					"def" => $_POST["def"],
 					"company" => $_POST["company"],
@@ -629,6 +608,7 @@
 			$result["category"] = $cat["name"];
 			$result["status"] = $status["name"];
 			$result["status_label"] = $status["label"];
+			$result["eq_user"] = $eq["who_use"];
 			
 			echo json_encode($result,true);
 	  }
@@ -665,6 +645,245 @@
 				$result["msg"] = "Tehtud";
 			echo json_encode($result,true);
 	  }
+    /**
+       * User::AddTech()
+       * 
+       * @return
+       */
+	  public function AddTech()
+	  {
+		  global $db, $core;
+			if (isset($_POST["label"])) {
+				$db->delete("eq_tech","eq_id = '".$_POST["eqid"]."'");
+				
+			foreach ($_POST["label"] as $key => $value):
+				if (isset($_POST["name"][$key])) {
+					$val = $_POST["name"][$key];
+				} else {
+					$val = "";
+				}
+			
+				$data = array("label" => $value,"name" => $val,"eq_id" => $_POST["eqid"]);
+				$db->insert("eq_tech",$data);
+				
+			endforeach;
+				$data = array("tech_info" => $_POST["techMore"]);
+				$db->update("eq", $data, "id='" . $_POST["eqid"] . "'");
 
+				$result["eqid"] = $_POST["eqid"];
+				$result["success"] = "1";
+				$result["msg"] = "Tehtud";
+				echo json_encode($result,true);
+			}
+	  }
+    /**
+       * User::GetEqTechData()
+       * 
+       * @return
+       */
+	  public function GetEqTechData()
+	  {
+		  global $db, $core;
+		  
+		  $techs = $db->fetch_all("SELECT * FROM eq_tech WHERE eq_id = '".$_GET["eqid"]."'");
+		  $eq = $db->first("SELECT * FROM eq WHERE id = '".$_GET["eqid"]."'");
+		  $i = 0;
+		  foreach ($techs as $tech):
+			$result["data"][$i]["id"] = $tech["id"];
+			$result["data"][$i]["label"] = $tech["label"];
+			$result["data"][$i]["value"] = $tech["name"];
+			$result["data"][$i]["eqid"] = $tech["eq_id"];
+			
+			$i++;
+		  endforeach;
+		  $result["more"] = $eq["tech_info"];
+		  
+		  echo json_encode($result, true);
+	  }
+    /**
+       * User::AddEqParts()
+       * 
+       * @return
+       */
+	  public function AddEqParts()
+	  {
+		  global $db, $core;
+		  
+			$data = array(
+				"eq_id" => $_POST["eqid"],
+				"code" => $_POST["code"],
+				"description" => $_POST["desc"],
+				"company" => $_POST["company"]
+			);
+			$db->insert("eq_parts",$data);
+			
+			$result["success"] = "1";
+			$result["msg"] = "Tehtud";
+			echo json_encode($result, true);
+	  }
+
+      /**
+       * User::GetEqPartsData()
+       * 
+       * @return
+       */
+	  public function GetEqPartsData()
+	  {
+		  global $db, $core;
+			
+			$his = $db->fetch_all("SELECT * FROM eq_parts WHERE eq_id = '".$_GET["id"]."'");
+			$i=0;
+			foreach ($his as $h):
+				$data["data"][$i]["Kood"] = $h["code"];
+				$data["data"][$i]["Kirjeldus"] = $h["description"];
+				$data["data"][$i]["Müüa andmed"] = $h["company"];
+				$data["data"][$i]["Tegevused"] = "<button class='btn btn-xs btn-danger' onClick='DeleteParts(".$h["id"].")'>Kustuta</button> <button class='btn btn-xs btn-primary' onClick='ChangeParts(".$h["id"].");'>Muuda</button>";
+ 				
+			$i++;	
+			endforeach;
+			
+			
+			echo json_encode($data,true);
+	  }
+
+      /**
+       * User::UploadEqFiles()
+       * 
+       * @return
+       */
+	  public function UploadEqFiles()
+	  {
+		  global $db, $core;
+				if (isset($_FILES["files"]) && !empty($_FILES["files"]["tmp_name"])) {
+					$f = $_FILES["files"];
+					$temporary = explode(".", $f["name"]);
+					$file_extension = end($temporary);
+					$location = $core->site_dir.'uploads/eq/'.$_POST["eqid"].'/files/'; 
+					$location_url = $core->site_url.'uploads/eq/'.$_POST["eqid"].'/files/';
+
+					if (!is_dir($location)){
+						mkdir($location, 0777, true);
+					} 
+					$filename = uniqid().".".$file_extension;
+					if (move_uploaded_file($f["tmp_name"],$location . $filename)) {	
+						$files = $location_url . $filename;
+					}
+					$data = array(
+						"eq_id" => $_POST["eqid"],
+						"file_location" => $location,
+						"file_url" => $files,
+						"file_type" => $file_extension,
+						"name" => $_POST["name"]
+					);
+					$db->insert("eq_files",$data);
+					
+				$result["eqid"] = $_POST["eqid"];				
+				$result["msg"] = "aaa";
+				$result["success"] = "1";
+				echo json_encode($result,true);
+			} 			
+	  }
+      /**
+       * User::GetEqFiles()
+       * 
+       * @return
+       */
+	  public function GetEqFiles()
+	  {
+		  global $db, $core;
+			$his = $db->fetch_all("SELECT * FROM eq_files WHERE eq_id = '".$_GET["eq_id"]."'");
+			$i=0;
+			foreach ($his as $h):
+				$result["files"][$i]["id"] = $h["id"];
+				$result["files"][$i]["name"] = $h["name"];
+				$filename = "assets/img/filetypes/".$h["file_type"].".png";
+				if (file_exists($core->site_dir.$filename)) {
+					$result["files"][$i]["img"] = $filename;
+				} else {
+					$result["files"][$i]["img"] = "assets/img/filetypes/other.png";
+				}
+			$i++;	
+			endforeach;
+			
+			echo json_encode($result,true);		  
+		  
+	  }
+      /**
+       * User::ViewEqFile()
+       * 
+       * @return
+       */
+	  public function ViewEqFile()
+	  {
+		  global $db, $core;
+			$file = $db->first("SELECT * FROM eq_files WHERE id = '".$_GET["fid"]."'");
+			
+			$result["location"] = $file["file_location"];
+			$result["url"] = $file["file_url"];
+			$result["type"] = $file["file_type"];
+			$result["name"] = $file["name"];
+			
+			echo json_encode($result,true);		  
+		  
+	  }
+      /**
+       * User::EditEqFile()
+       * 
+       * @return
+       */
+	  public function EditEqFile()
+	  {
+		  global $db, $core;
+			
+			$data = array(
+				"name" => $_POST["name"]
+			);
+ 			$db->update("eq_files", $data, "id='" . $_POST["fid"] . "'");
+
+				$result["eqid"] = $_POST["eqid"];				
+				$result["msg"] = "aaa";
+				$result["success"] = "1";
+			echo json_encode($result,true);		  
+		  
+	  }
+      /**
+       * User::DeleteEqFile()
+       * 
+       * @return
+       */
+	  public function DeleteEqFile()
+	  {
+		  global $db, $core;
+					
+					$c = $db->first("SELECT * FROM eq_files WHERE id = '".$_POST["fid"]."'");
+
+					$db->delete("eq_files","id = '".$_POST["fid"]."'");
+					$result["success"] = "1";
+					$result["eid"] = $c["eq_id"];
+					$result["msg"] = "Jee done!";
+				echo json_encode($result,true);
+	  }
+      /**
+       * User::userList()
+       * 
+       * @return
+       */
+	  public function userList()
+	  {
+		  global $db, $core;
+		  
+			$lists = $db->fetch_all("SELECT * FROM users");
+			
+			$i=0;
+			foreach ($lists as $list):
+				$data["data"][$i]["id"] = $list["id"];
+				$data["data"][$i]["Username"] = $list["username"];
+				$data["data"][$i]["First name"] = $list["fname"];
+				$data["data"][$i]["Last name"] = $list["lname"];
+				$data["data"][$i]["Action"] = '<button class="btn btn-xs btn-danger" onClick="DeleteUser('.$list["id"].');"><i class="fa fa-times"></i></button> <button data-id="EditUser" type="button" data-toggle="modal" data-target="#OpenModal" data-res="'.$list["id"].'"  class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>';
+			$i++;
+			endforeach;
+			echo json_encode($data,true);
+	  }	  
 	  }	
 ?>

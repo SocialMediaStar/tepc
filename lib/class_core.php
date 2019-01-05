@@ -48,6 +48,7 @@
           
 		  $this->site_url = $row["site_url"];
 		  $this->site_dir = $row["site_dir"];
+		  $this->site_name = $row["site_name"];
 
 		  
 		  $this->smtp_host = "";

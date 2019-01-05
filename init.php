@@ -52,4 +52,8 @@
   //StartUser Class 
   require_once(tepcomp . "lib/class_user.php");
   $user = new Users();
-?>
+  //StartUser Class 
+  require_once(tepcomp . "lib/class_eq.php");
+  $eq = new Eq();
+
+  ?>

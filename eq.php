@@ -5,14 +5,12 @@
 <?php 
 if ($user->logged_in) {
 
-if (isset($_GET["id"])) {
-	$eq = $db->first("SELECT * FROM eq WHERE id = '".$_GET["id"]."'");
-require "html/eq.php"; 	
+if (isset($_GET["eq_id"])) {
+require "backend/eq.php"; 	
 } else {
-redirect_to("equipments.php");
+redirect_to("equipments.php"); 	
 }
-	
 } else {
-require "html/login.php"; 	
+redirect_to("index.php"); 	
 }
 ?>

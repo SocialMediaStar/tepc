@@ -4,9 +4,8 @@
 ?>
 <?php 
 if ($user->logged_in) {
-require "html/users.php"; 	
-	
+	require "backend/users.php";
 } else {
-require "html/login.php"; 	
+	redirect_to("login.php"); 	
 }
 ?>
